@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fetch API Calls</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    </head>
+    <body>
+    <div class='container'>
+        <h1 class='display-4 mb-4 mt-4 '>Fetch API Examples</h1>
+        <button id='getRequest' type="button" class="btn btn-primary mb-2">Get</button>
+        <hr>
+        <form id='postBook'>
+            <div class='form-group'>
+            <h3 class='mb-3'>Add a book</h3>
+            <input type='text' placeholder='ID Number' id='postID' class="form-control"/>
+            <input type='text' placeholder='Title' id='postTitle' class="form-control"/>
+            <textarea type='text' placeholder='Description' id='postDescription' class="form-control"></textarea> 
+            <input type='text' placeholder='Page Count' id='postPageCount' class="form-control"/>
+            <textarea type='Excerpt' placeholder='Excerpt' id='postExcerpt' class="form-control"></textarea>
+            <input type='PublishDate' placeholder='Published' id='postPublishDate' class="form-control mb-2"/>
+            <input type='submit' value='Post' type="button" class="btn btn-success" class="form-control"/> 
+            </div>
+        </form>
+        <div id='APIResponse' ></div>
+    </div>
+    <script>
+        document.getElementById('getRequest').addEventListener('click', fetchBookList)
+        document.getElementById('postBook').addEventListener('submit', postBook)
+        
+        function fetchBookList () {
+            fetch('http://fakerestapi.azurewebsites.net/api/Books')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                let formattedData = ''
+                data.forEach((book) => {
+                    formattedData += `
+                        <div class='card mb-2 p-2'>
+                        <h4 class="card-title">${book.Title}</h4>
+                        <p class="card-text">${book.Description}
+                        </div>
+                        `
+                })
+                console.log(formattedData)
+                document.getElementById('APIResponse').innerHTML = formattedData
+                })
+            .catch(err => document.getElementById('APIResponse').innerHTML = err )
+        }
+
+        function postBook(e) {
+            e.preventDefault()
+            const init = {
+                method: 'POST',
+                body: JSON.stringify({
+                    ID: postID.value,
+                    Title: postTitle.value,
+                    Description: postDescription.value,
+                    PageCount: postPageCount.value,
+                    Excerpt: postExcerpt.value,
+                    PublishDate: postPublishDate.value
+                }),
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
+            }
+           
+            
+            fetch('http://fakerestapi.azurewebsites.net/api/Books', init)
+            .then(res => res.json())
+            .then(data => document.getElementById('APIResponse').innerHTML = `
+            <div class='card p-2'>
+            <h4 class='card-title'>Added Book:</h4>
+            <p id='card-text'>ID: ${data.ID} </p>
+            <p id='card-text'>Title: ${data.Title}</p>
+            <p id='card-text'>Description: ${data.Description}</p>
+            <p id='card-text'>Excerpt: ${data.Excerpt}</p>
+            <p id='card-text'>Page Count: ${data.PageCount}</p>
+            <p id='card-text'>Publish Date: ${data.PublishDate}</p>
+            </div>`
+            )
+            .catch(data => document.getElementById('APIResponse').innerHTML = err)
+        }
+
+    </script>
+    </body>
+</html>
