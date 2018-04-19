@@ -30,7 +30,7 @@
         document.getElementById('postBook').addEventListener('submit', postBook)
         
         function fetchBookList () {
-            fetch('http://fakerestapi.azurewebsites.net/api/Books')
+            fetch('https://fakerestapi.azurewebsites.net/api/Books')
             .then(res => res.json())
             .then(data => {
                 console.log(data)
@@ -67,7 +67,7 @@
             }
            
             
-            fetch('http://fakerestapi.azurewebsites.net/api/Books', init)
+            fetch('https://fakerestapi.azurewebsites.net/api/Books', init)
             .then(res => res.json())
             .then(data => document.getElementById('APIResponse').innerHTML = `
             <div class='card p-2'>
